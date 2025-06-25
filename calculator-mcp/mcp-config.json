@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "calculator": {
+      "command": "./calculator-mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}
