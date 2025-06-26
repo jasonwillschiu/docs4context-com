@@ -9,6 +9,7 @@ import (
 
 	// "path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -62,14 +63,53 @@ func GetPlatformBinary() string {
 	return binaryName
 }
 
-// CompareVersions compares two version strings (basic semantic version comparison)
+// CompareVersions compares two version strings and returns true if latest is newer than current
 func CompareVersions(current, latest string) (bool, error) {
 	// Remove 'v' prefix if present
 	current = strings.TrimPrefix(current, "v")
 	latest = strings.TrimPrefix(latest, "v")
 
-	// Simple string comparison for now - could be enhanced with proper semver parsing
-	return current != latest, nil
+	// Parse version strings (assumes format: major.minor.patch)
+	currentParts, err := parseVersion(current)
+	if err != nil {
+		return false, fmt.Errorf("invalid current version format: %s", current)
+	}
+
+	latestParts, err := parseVersion(latest)
+	if err != nil {
+		return false, fmt.Errorf("invalid latest version format: %s", latest)
+	}
+
+	// Compare major, minor, patch in order
+	for i := 0; i < 3; i++ {
+		if latestParts[i] > currentParts[i] {
+			return true, nil // latest is newer
+		} else if latestParts[i] < currentParts[i] {
+			return false, nil // current is newer
+		}
+		// If equal, continue to next part
+	}
+
+	return false, nil // versions are equal
+}
+
+// parseVersion parses a semantic version string (e.g., "1.2.3") into [major, minor, patch]
+func parseVersion(version string) ([]int, error) {
+	parts := strings.Split(version, ".")
+	if len(parts) != 3 {
+		return nil, fmt.Errorf("version must have exactly 3 parts (major.minor.patch)")
+	}
+
+	result := make([]int, 3)
+	for i, part := range parts {
+		num, err := strconv.Atoi(part)
+		if err != nil {
+			return nil, fmt.Errorf("version part '%s' is not a valid number", part)
+		}
+		result[i] = num
+	}
+
+	return result, nil
 }
 
 // DownloadUpdate downloads the latest binary for the current platform

@@ -20,7 +20,8 @@
       "mcp__docs4context__search_content",
       "mcp__docs4context__get_topic_details",
       "Bash(mkdir:*)",
-      "Bash(bun run:*)"
+      "Bash(bun run:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }
