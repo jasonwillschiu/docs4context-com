@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "calculator": {
+      "command": "./calculator-mcp/calculator-mcp",
+      "cwd": ".",
+      "timeout": 5000
+    },
+    "context7": {
+      "command": "bun",
+      "args": ["-y", "@context7/mcp-server"],
+      "timeout": 10000
+    }
+  }
+}

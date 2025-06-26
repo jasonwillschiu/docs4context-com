@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(go mod:*)",
+      "Bash(go build:*)",
+      "Bash(ls:*)",
+      "Bash(claude mcp add:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "mcp__docs4context__save_context_document",
+      "Bash(go list:*)",
+      "Bash(timeout:*)",
+      "Bash(awk:*)",
+      "Bash(find:*)",
+      "Bash(go get:*)",
+      "mcp__docs4context__search_titles",
+      "mcp__docs4context__search_content",
+      "mcp__docs4context__get_topic_details"
+    ],
+    "deny": []
+  }
+}

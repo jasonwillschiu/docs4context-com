@@ -1,0 +1,1301 @@
+# METADATA
+# TOKEN_COUNT: 9772
+# DATE_CREATED: 2025-06-26T01:59:29Z
+# REPO: sst/opencode
+# SOURCE: https://context7.com/sst/opencode/llms.txt
+#
+TITLE: Example opencode Global/Project Configuration
+DESCRIPTION: This snippet provides a complete example of an `opencode.json` configuration file. It demonstrates setting the schema, theme, default model, and boolean flags for autoshare and autoupdate. This file can be placed globally or in a project root.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/config.mdx#_snippet_0
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "opencode",
+  "model": "anthropic/claude-sonnet-4-20250514",
+  "autoshare": false,
+  "autoupdate": true
+}
+```
+
+----------------------------------------
+
+TITLE: Opencode Agent Important Code Best Practices and Anti-Patterns
+DESCRIPTION: This section highlights critical coding practices to adhere to and common anti-patterns to avoid for the opencode agent. It emphasizes functional cohesion, avoiding unnecessary destructuring, conditional statements like `else`, error handling with `try`/`catch`, the `any` type, and `let` statements, while promoting concise variable names and leveraging Bun APIs.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/AGENTS.md#_snippet_3
+
+LANGUAGE: APIDOC
+CODE:
+```
+Keep things in one function unless composable or reusable
+DO NOT do unnecessary destructuring of variables
+DO NOT use `else` statements unless necessary
+DO NOT use `try`/`catch` if it can be avoided
+AVOID `try`/`catch` where possible
+AVOID `else` statements
+AVOID using `any` type
+AVOID `let` statements
+PREFER single word variable names where possible
+Use as many bun apis as possible like Bun.file()
+```
+
+----------------------------------------
+
+TITLE: Authenticate opencode with an LLM provider
+DESCRIPTION: Demonstrates the interactive `opencode auth login` command, allowing users to select and configure API credentials for various LLM providers like Anthropic, OpenAI, Google, and others supported by Models.dev.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/index.mdx#_snippet_4
+
+LANGUAGE: bash
+CODE:
+```
+$ opencode auth login
+
+┌  Add credential
+│
+◆  Select provider
+│  ● Anthropic (recommended)
+│  ○ OpenAI
+│  ○ Google
+│  ○ Amazon Bedrock
+│  ○ Azure
+│  ○ DeepSeek
+│  ○ Groq
+│  ...
+└
+```
+
+----------------------------------------
+
+TITLE: Install opencode binary using the official script
+DESCRIPTION: Use a curl command to download and execute the official opencode installation script for direct binary installation.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/index.mdx#_snippet_1
+
+LANGUAGE: bash
+CODE:
+```
+curl -fsSL https://opencode.ai/install | bash
+```
+
+----------------------------------------
+
+TITLE: Install opencode AI Agent
+DESCRIPTION: Commands to install the opencode AI agent using a direct curl script or various package managers like npm, Homebrew, and paru.
+SOURCE: https://github.com/sst/opencode/blob/dev/README.md#_snippet_0
+
+LANGUAGE: bash
+CODE:
+```
+# YOLO
+curl -fsSL https://opencode.ai/install | bash
+
+# Package managers
+npm i -g opencode-ai@latest        # or bun/pnpm/yarn
+brew install sst/tap/opencode      # macOS
+paru -S opencode-bin               # Arch Linux
+```
+
+----------------------------------------
+
+TITLE: Install opencode-ai using Node.js package managers
+DESCRIPTION: Instructions to install the opencode-ai package globally using npm, Bun, pnpm, or Yarn.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/index.mdx#_snippet_0
+
+LANGUAGE: bash
+CODE:
+```
+npm install -g opencode-ai
+```
+
+LANGUAGE: bash
+CODE:
+```
+bun install -g opencode-ai
+```
+
+LANGUAGE: bash
+CODE:
+```
+pnpm install -g opencode-ai
+```
+
+LANGUAGE: bash
+CODE:
+```
+yarn global add opencode-ai
+```
+
+----------------------------------------
+
+TITLE: Install opencode binary on macOS with Homebrew
+DESCRIPTION: Install the opencode binary on macOS systems using the Homebrew package manager from the sst tap.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/index.mdx#_snippet_2
+
+LANGUAGE: bash
+CODE:
+```
+brew install sst/tap/opencode
+```
+
+----------------------------------------
+
+TITLE: Opencode Agent Core Architecture Guidelines
+DESCRIPTION: This outlines the fundamental architectural principles and components of the opencode agent. It details the implementation of Tools, context passing mechanisms, input validation using Zod, structured logging, persistence via the Storage namespace, and the interaction with the Go TUI API client, including the process for client updates.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/AGENTS.md#_snippet_4
+
+LANGUAGE: APIDOC
+CODE:
+```
+Tools: Implement Tool.Info interface with execute() method
+Context: Pass sessionID in tool context, use App.provide() for DI
+Validation: All inputs validated with Zod schemas
+Logging: Use Log.create({ service: "name" }) pattern
+Storage: Use Storage namespace for persistence
+API Client: Go TUI communicates with TypeScript server via generated client. When adding/modifying server endpoints in packages/opencode/src/server/server.ts, run cd packages/tui && go generate ./pkg/client/ to update the Go client code and OpenAPI spec.
+```
+
+----------------------------------------
+
+TITLE: Start opencode CLI
+DESCRIPTION: Starts the opencode CLI for the current directory or a specified project path.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_0
+
+LANGUAGE: bash
+CODE:
+```
+opencode
+```
+
+LANGUAGE: bash
+CODE:
+```
+opencode /path/to/project
+```
+
+----------------------------------------
+
+TITLE: Upgrade opencode CLI version
+DESCRIPTION: Updates the opencode CLI to the latest version or a specified target version.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_7
+
+LANGUAGE: bash
+CODE:
+```
+opencode upgrade [target]
+```
+
+LANGUAGE: bash
+CODE:
+```
+opencode upgrade
+```
+
+LANGUAGE: bash
+CODE:
+```
+opencode upgrade v0.1.48
+```
+
+----------------------------------------
+
+TITLE: Log in to an opencode provider
+DESCRIPTION: Logs you into a provider and saves them in the credentials file in `~/.local/share/opencode/auth.json`. When opencode starts up it will load the providers from this file, and if there are any keys defined in your environments or a `.env` file in your project.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_4
+
+LANGUAGE: bash
+CODE:
+```
+opencode auth login
+```
+
+----------------------------------------
+
+TITLE: Run opencode Locally for Development
+DESCRIPTION: Commands to set up and run the opencode project locally for development purposes. This requires Bun to be installed.
+SOURCE: https://github.com/sst/opencode/blob/dev/README.md#_snippet_1
+
+LANGUAGE: bash
+CODE:
+```
+$ bun install
+$ bun run packages/opencode/src/index.ts
+```
+
+----------------------------------------
+
+TITLE: Install Project Dependencies with Bun
+DESCRIPTION: Installs all necessary project dependencies using the Bun package manager. This command should be run once after cloning the repository or when new dependencies are added.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/README.md#_snippet_0
+
+LANGUAGE: Bash
+CODE:
+```
+bun install
+```
+
+----------------------------------------
+
+TITLE: Run opencode in non-interactive mode
+DESCRIPTION: Executes opencode with a direct prompt, useful for scripting, automation, or when you want a quick answer without launching the full TUI.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_1
+
+LANGUAGE: bash
+CODE:
+```
+opencode run [message..]
+```
+
+LANGUAGE: bash
+CODE:
+```
+opencode run Explain the use of context in Go
+```
+
+----------------------------------------
+
+TITLE: Initialize New Starlight Project
+DESCRIPTION: Use this command to create a new Astro project pre-configured with the Starlight template, providing a ready-to-use documentation site structure.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/README.md#_snippet_0
+
+LANGUAGE: Shell
+CODE:
+```
+npm create astro@latest -- --template starlight
+```
+
+----------------------------------------
+
+TITLE: File Reading Tool (OpenCode) API Reference
+DESCRIPTION: This section details the 'read_file' tool, its parameters, return values, and specific behaviors. It outlines how to access files, manage read limits, and interpret results, including special handling for images and empty files.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/read.txt#_snippet_0
+
+LANGUAGE: APIDOC
+CODE:
+```
+Tool: File Reader
+Description: Reads a file from the local filesystem. This tool can access any file directly.
+
+Method: read_file(file_path: str, line_offset: int = 1, limit: int = 2000)
+
+Parameters:
+  file_path (str):
+    Description: The absolute path to the file to be read.
+    Constraints: Must be an absolute path; relative paths are not supported. Assumed to be valid if provided by the User.
+  line_offset (int, optional):
+    Description: The starting line number from which to begin reading the file.
+    Default: 1 (reads from the beginning of the file).
+  limit (int, optional):
+    Description: The maximum number of lines to read from the file.
+    Default: 2000 lines.
+    Note: Any lines longer than 2000 characters will be truncated.
+
+Returns:
+  string: File contents formatted using 'cat -n' style, with line numbers starting at 1.
+
+Special Behaviors:
+  - Error Handling: If the file does not exist, an error will be returned, but the tool call is valid.
+  - Image Files: When reading image files (e.g., PNG, JPG), the contents are presented visually by the multimodal LLM.
+  - Empty Files: If a file exists but has empty contents, a system reminder warning will be returned in place of file contents.
+  - Screenshot Handling: Always use this tool to view screenshot files, including temporary paths (e.g., /var/folders/.../Screenshot.png).
+
+Usage Notes:
+  - It is recommended to read the whole file by not providing 'line_offset' and 'limit' parameters for general use.
+  - Supports speculative batch reading: it is often better to read multiple potentially useful files as a batch in a single response.
+```
+
+----------------------------------------
+
+TITLE: Essential Starlight Development Commands
+DESCRIPTION: A comprehensive list of npm commands to manage your Starlight project, including installing dependencies, starting the development server, building for production, and previewing the built site.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/README.md#_snippet_2
+
+LANGUAGE: Shell
+CODE:
+```
+npm install             # Installs dependencies
+npm run dev             # Starts local dev server at localhost:4321
+npm run build           # Build your production site to ./dist/
+npm run preview         # Preview your build locally, before deploying
+npm run astro ...       # Run CLI commands like astro add, astro check
+npm run astro -- --help # Get help using the Astro CLI
+```
+
+----------------------------------------
+
+TITLE: Configure Models and Providers in opencode
+DESCRIPTION: This JSON snippet illustrates how to configure the `provider` and `model` options within your `opencode.json` file. These settings allow you to specify which AI models and their respective providers opencode should use.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/config.mdx#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": { },
+  "model": ""
+}
+```
+
+----------------------------------------
+
+TITLE: Manual LSP Server Configuration
+DESCRIPTION: This JSON snippet demonstrates how to manually configure Language Server Protocol (LSP) servers within your opencode project's configuration file. It shows examples for enabling and specifying commands for 'go' (gopls) and 'typescript' (typescript-language-server) LSP servers, including additional arguments for the TypeScript server.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/lsp-servers.mdx#_snippet_0
+
+LANGUAGE: json
+CODE:
+```
+{
+  "lsp": {
+    "go": {
+      "disabled": false,
+      "command": "gopls"
+    },
+    "typescript": {
+      "disabled": false,
+      "command": "typescript-language-server",
+      "args": ["--stdio"]
+    }
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Configure Custom LLM Provider in opencode.json
+DESCRIPTION: Demonstrates how to add a custom LLM provider like OpenRouter to your opencode configuration. This involves specifying the npm package, a display name, and the models you wish to expose from that provider.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/models.mdx#_snippet_0
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "openrouter": {
+      "npm": "@openrouter/ai-sdk-provider",
+      "name": "OpenRouter",
+      "options": {},
+      "models": {
+        "anthropic/claude-3.5-sonnet": {
+          "name": "Claude 3.5 Sonnet"
+        }
+      }
+    }
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Specify Default LLM Model in opencode.json
+DESCRIPTION: Explains how to set a default LLM model directly in the opencode configuration file. This model will be prioritized when opencode starts up, using the format "provider/model".
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/models.mdx#_snippet_3
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-sonnet-4-20250514"
+}
+```
+
+----------------------------------------
+
+TITLE: Creating a GitHub Pull Request with `gh pr create`
+DESCRIPTION: This command demonstrates how to create a new pull request using the GitHub CLI. It utilizes a HEREDOC to pass a multi-line body, ensuring proper formatting for the summary and test plan sections. The `--title` flag sets the PR title, and the body includes a reference to the `opencode` tool.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/bash.txt#_snippet_4
+
+LANGUAGE: Bash
+CODE:
+```
+gh pr create --title "the pr title" --body "$(cat <<'EOF'
+## Summary
+<1-3 bullet points>
+
+## Test plan
+[Checklist of TODOs for testing the pull request...]
+
+🤖 Generated with [opencode](https://opencode.ai)
+EOF
+)"
+```
+
+----------------------------------------
+
+TITLE: Configure Local LLM Model in opencode.json
+DESCRIPTION: Shows how to configure a local LLM model, such as Llama2 via Ollama, in your opencode configuration. This requires specifying the npm package for compatibility and the "baseURL" where the local model server is running.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/models.mdx#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "llama2": {}
+      }
+    }
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Example OpenCode Theme Configuration in JSON
+DESCRIPTION: This JSON snippet defines a custom theme for opencode, utilizing a 'defs' section to establish a palette of reusable Nord-inspired color values. The 'theme' section then maps various UI components, including primary, secondary, accent, text, background, border, diff, markdown, and syntax highlighting elements, to these defined colors for both dark and light mode appearances.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/themes.mdx#_snippet_2
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "defs": {
+    "nord0": "#2E3440",
+    "nord1": "#3B4252",
+    "nord2": "#434C5E",
+    "nord3": "#4C566A",
+    "nord4": "#D8DEE9",
+    "nord5": "#E5E9F0",
+    "nord6": "#ECEFF4",
+    "nord7": "#8FBCBB",
+    "nord8": "#88C0D0",
+    "nord9": "#81A1C1",
+    "nord10": "#5E81AC",
+    "nord11": "#BF616A",
+    "nord12": "#D08770",
+    "nord13": "#EBCB8B",
+    "nord14": "#A3BE8C",
+    "nord15": "#B48EAD"
+  },
+  "theme": {
+    "primary": {
+      "dark": "nord8",
+      "light": "nord10"
+    },
+    "secondary": {
+      "dark": "nord9",
+      "light": "nord9"
+    },
+    "accent": {
+      "dark": "nord7",
+      "light": "nord7"
+    },
+    "error": {
+      "dark": "nord11",
+      "light": "nord11"
+    },
+    "warning": {
+      "dark": "nord12",
+      "light": "nord12"
+    },
+    "success": {
+      "dark": "nord14",
+      "light": "nord14"
+    },
+    "info": {
+      "dark": "nord8",
+      "light": "nord10"
+    },
+    "text": {
+      "dark": "nord4",
+      "light": "nord0"
+    },
+    "textMuted": {
+      "dark": "nord3",
+      "light": "nord1"
+    },
+    "background": {
+      "dark": "nord0",
+      "light": "nord6"
+    },
+    "backgroundPanel": {
+      "dark": "nord1",
+      "light": "nord5"
+    },
+    "backgroundElement": {
+      "dark": "nord1",
+      "light": "nord4"
+    },
+    "border": {
+      "dark": "nord2",
+      "light": "nord3"
+    },
+    "borderActive": {
+      "dark": "nord3",
+      "light": "nord2"
+    },
+    "borderSubtle": {
+      "dark": "nord2",
+      "light": "nord3"
+    },
+    "diffAdded": {
+      "dark": "nord14",
+      "light": "nord14"
+    },
+    "diffRemoved": {
+      "dark": "nord11",
+      "light": "nord11"
+    },
+    "diffContext": {
+      "dark": "nord3",
+      "light": "nord3"
+    },
+    "diffHunkHeader": {
+      "dark": "nord3",
+      "light": "nord3"
+    },
+    "diffHighlightAdded": {
+      "dark": "nord14",
+      "light": "nord14"
+    },
+    "diffHighlightRemoved": {
+      "dark": "nord11",
+      "light": "nord11"
+    },
+    "diffAddedBg": {
+      "dark": "#3B4252",
+      "light": "#E5E9F0"
+    },
+    "diffRemovedBg": {
+      "dark": "#3B4252",
+      "light": "#E5E9F0"
+    },
+    "diffContextBg": {
+      "dark": "nord1",
+      "light": "nord5"
+    },
+    "diffLineNumber": {
+      "dark": "nord2",
+      "light": "nord4"
+    },
+    "diffAddedLineNumberBg": {
+      "dark": "#3B4252",
+      "light": "#E5E9F0"
+    },
+    "diffRemovedLineNumberBg": {
+      "dark": "#3B4252",
+      "light": "#E5E9F0"
+    },
+    "markdownText": {
+      "dark": "nord4",
+      "light": "nord0"
+    },
+    "markdownHeading": {
+      "dark": "nord8",
+      "light": "nord10"
+    },
+    "markdownLink": {
+      "dark": "nord9",
+      "light": "nord9"
+    },
+    "markdownLinkText": {
+      "dark": "nord7",
+      "light": "nord7"
+    },
+    "markdownCode": {
+      "dark": "nord14",
+      "light": "nord14"
+    },
+    "markdownBlockQuote": {
+      "dark": "nord3",
+      "light": "nord3"
+    },
+    "markdownEmph": {
+      "dark": "nord12",
+      "light": "nord12"
+    },
+    "markdownStrong": {
+      "dark": "nord13",
+      "light": "nord13"
+    },
+    "markdownHorizontalRule": {
+      "dark": "nord3",
+      "light": "nord3"
+    },
+    "markdownListItem": {
+      "dark": "nord8",
+      "light": "nord10"
+    },
+    "markdownListEnumeration": {
+      "dark": "nord7",
+      "light": "nord7"
+    },
+    "markdownImage": {
+      "dark": "nord9",
+      "light": "nord9"
+    },
+    "markdownImageText": {
+      "dark": "nord7",
+      "light": "nord7"
+    },
+    "markdownCodeBlock": {
+      "dark": "nord4",
+      "light": "nord0"
+    },
+    "syntaxComment": {
+      "dark": "nord3",
+      "light": "nord3"
+    },
+    "syntaxKeyword": {
+      "dark": "nord9",
+      "light": "nord9"
+    },
+    "syntaxFunction": {
+      "dark": "nord8",
+      "light": "nord8"
+    },
+    "syntaxVariable": {
+      "dark": "nord7",
+      "light": "nord7"
+    },
+    "syntaxString": {
+      "dark": "nord14",
+      "light": "nord14"
+    },
+    "syntaxNumber": {
+      "dark": "nord15",
+      "light": "nord15"
+    },
+    "syntaxType": {
+      "dark": "nord7",
+      "light": "nord7"
+    },
+    "syntaxOperator": {
+      "dark": "nord9",
+      "light": "nord9"
+    },
+    "syntaxPunctuation": {
+      "dark": "nord4",
+      "light": "nord0"
+    }
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Bun Project Build and Test Commands
+DESCRIPTION: This section lists the essential command-line instructions for managing the opencode agent project. It covers installing dependencies, running the application, performing type checks, and executing both all tests and specific test files using Bun. An alternative npm command for type checking is also noted.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/AGENTS.md#_snippet_0
+
+LANGUAGE: Bun
+CODE:
+```
+bun install
+```
+
+LANGUAGE: Bun
+CODE:
+```
+bun run index.ts
+```
+
+LANGUAGE: Bun
+CODE:
+```
+bun run typecheck
+```
+
+LANGUAGE: npm
+CODE:
+```
+npm run typecheck
+```
+
+LANGUAGE: Bun
+CODE:
+```
+bun test
+```
+
+LANGUAGE: Bun
+CODE:
+```
+bun test test/tool/tool.test.ts
+```
+
+----------------------------------------
+
+TITLE: Analyzing Git Branch State Before Pull Request Creation
+DESCRIPTION: Before creating a pull request, it's crucial to understand the current state of the branch relative to `main`. This snippet shows a set of `git` commands to be run in parallel to gather information on untracked files, staged/unstaged changes, and full commit history since diverging from the `main` branch.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/bash.txt#_snippet_3
+
+LANGUAGE: Bash
+CODE:
+```
+git status
+git diff
+git log
+git diff main...HEAD
+```
+
+----------------------------------------
+
+TITLE: Manage opencode provider credentials
+DESCRIPTION: Manages credentials and login for various providers.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_3
+
+LANGUAGE: bash
+CODE:
+```
+opencode auth [command]
+```
+
+----------------------------------------
+
+TITLE: Run JavaScript Application with Bun
+DESCRIPTION: Executes the main application entry point (index.ts) using the Bun runtime. This command starts the project.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/README.md#_snippet_1
+
+LANGUAGE: Bash
+CODE:
+```
+bun run index.ts
+```
+
+----------------------------------------
+
+TITLE: Select Active LLM Model via CLI
+DESCRIPTION: Illustrates the command-line interface (CLI) command used within opencode to select a specific LLM model when multiple models are configured and available.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/models.mdx#_snippet_2
+
+LANGUAGE: bash
+CODE:
+```
+/models
+```
+
+----------------------------------------
+
+TITLE: Creating a Git Commit with Heredoc Message
+DESCRIPTION: This example demonstrates how to create a git commit using a HEREDOC to pass a multi-line commit message, ensuring proper formatting and including required attribution for automated generation.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/bash.txt#_snippet_2
+
+LANGUAGE: bash
+CODE:
+```
+git commit -m "$(cat <<'EOF'
+   Commit message here.
+
+   🤖 Generated with [opencode](https://opencode.ai)
+
+   Co-Authored-By: opencode <noreply@opencode.ai>
+   EOF
+   )"
+```
+
+----------------------------------------
+
+TITLE: Default opencode Keybind Configuration
+DESCRIPTION: This JSON snippet displays the default keybind configurations for opencode, including the leader key and various actions like session management, navigation, and application control. Users can modify this file to customize their keybindings.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/keybinds.mdx#_snippet_0
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "keybinds": {
+    "leader": "ctrl+x",
+    "help": "<leader>h",
+    "editor_open": "<leader>e",
+    "session_new": "<leader>n",
+    "session_list": "<leader>l",
+    "session_share": "<leader>s",
+    "session_interrupt": "esc",
+    "session_compact": "<leader>c",
+    "tool_details": "<leader>d",
+    "model_list": "<leader>m",
+    "theme_list": "<leader>t",
+    "project_init": "<leader>i",
+    "input_clear": "ctrl+c",
+    "input_paste": "ctrl+v",
+    "input_submit": "enter",
+    "input_newline": "shift+enter,ctrl+j",
+    "history_previous": "up",
+    "history_next": "down",
+    "messages_page_up": "pgup",
+    "messages_page_down": "pgdown",
+    "messages_half_page_up": "ctrl+alt+u",
+    "messages_half_page_down": "ctrl+alt+d",
+    "messages_previous": "ctrl+alt+k",
+    "messages_next": "ctrl+alt+j",
+    "messages_first": "ctrl+g",
+    "messages_last": "ctrl+alt+g",
+    "app_exit": "ctrl+c,<leader>q"
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Opencode Agent TypeScript/Bun Code Style Guidelines
+DESCRIPTION: These guidelines define the preferred coding style for the opencode agent, focusing on consistency and maintainability. They cover runtime environment, import conventions, type usage with Zod and TypeScript interfaces, naming conventions, error handling strategies, and recommended file structure organization.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/AGENTS.md#_snippet_2
+
+LANGUAGE: APIDOC
+CODE:
+```
+Runtime: Bun with TypeScript ESM modules
+Imports: Use relative imports for local modules, named imports preferred
+Types: Zod schemas for validation, TypeScript interfaces for structure
+Naming: camelCase for variables/functions, PascalCase for classes/namespaces
+Error handling: Use Result patterns, avoid throwing exceptions in tools
+File structure: Namespace-based organization (e.g., Tool.define(), Session.create())
+```
+
+----------------------------------------
+
+TITLE: Customize Keybinds in opencode
+DESCRIPTION: This JSON snippet demonstrates the structure for customizing keyboard shortcuts using the `keybinds` option in your `opencode.json` file. Users can define custom key combinations for various actions.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/config.mdx#_snippet_3
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "keybinds": { }
+}
+```
+
+----------------------------------------
+
+TITLE: Initial Git Status and Log Commands
+DESCRIPTION: Before creating a commit, run these commands in parallel to inspect the current repository state, view staged/unstaged changes, and review recent commit messages to align with repository style.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/bash.txt#_snippet_1
+
+LANGUAGE: bash
+CODE:
+```
+git status
+git diff
+git log
+```
+
+----------------------------------------
+
+TITLE: Example: Complex Task with Tool Usage
+DESCRIPTION: Shows opencode's approach to handling complex requests like 'write tests for new feature', detailing the sequence of internal tool uses (grep, glob search, read file, edit file) to accomplish the task.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/session/prompt/anthropic.txt#_snippet_6
+
+LANGUAGE: CLI Dialogue
+CODE:
+```
+user: write tests for new feature
+assistant: [uses grep and glob search tools to find where similar tests are defined, uses concurrent read file tool use blocks in one tool call to read relevant files at the same time, uses edit file tool to write new tests]
+```
+
+----------------------------------------
+
+TITLE: Configure Remote MCP Server in opencode.json
+DESCRIPTION: This JSON configuration snippet illustrates how to define a remote Model Context Protocol (MCP) server in your `opencode.json` file. It sets the server type to 'remote' and specifies the URL where the remote MCP server can be accessed.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/mcp-servers.mdx#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "remotemcp": {
+      "type": "remote",
+      "url": "https://my-mcp-server.com"
+    }
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Create Custom opencode Theme Directories and Files
+DESCRIPTION: This snippet demonstrates how to set up the necessary directories and create a new JSON file for a custom theme. It provides commands for both user-wide themes, which are stored in the user's config directory, and project-specific themes, which reside in the project's root directory.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/themes.mdx#_snippet_0
+
+LANGUAGE: bash
+CODE:
+```
+# For user-wide themes
+mkdir -p ~/.config/opencode/themes
+vim ~/.config/opencode/themes/my-theme.json
+
+# For project-specific themes
+mkdir -p .opencode/themes
+vim .opencode/themes/my-theme.json
+```
+
+----------------------------------------
+
+TITLE: Configure Themes in opencode
+DESCRIPTION: This snippet shows how to set the `theme` option in your `opencode.json` configuration. This allows users to customize the visual appearance of the opencode application.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/config.mdx#_snippet_2
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": ""
+}
+```
+
+----------------------------------------
+
+TITLE: Multi-File Edit Tool Parameters
+DESCRIPTION: Defines the required parameters for performing multiple sequential edits on a single file using the Multi-File Edit tool. All edits are applied in sequence, operating on the result of the previous edit.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/multiedit.txt#_snippet_0
+
+LANGUAGE: APIDOC
+CODE:
+```
+MultiFileEditTool:
+  file_path: string (absolute path)
+    description: The absolute path to the file to modify (must be absolute, not relative).
+  edits: array of objects
+    description: An array of edit operations to perform.
+    items:
+      old_string: string
+        description: The text to replace (must match the file contents exactly, including all whitespace and indentation).
+      new_string: string
+        description: The edited text to replace the old_string.
+      replace_all: boolean (optional, default: false)
+        description: Replace all occurrences of old_string. Useful for renaming variables.
+```
+
+----------------------------------------
+
+TITLE: Configure MCP Servers in opencode
+DESCRIPTION: This snippet shows how to configure MCP (Multi-Cloud Platform) servers using the `mcp` option in your `opencode.json` file. This allows opencode to connect to and utilize specified MCP server instances.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/config.mdx#_snippet_4
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": { }
+}
+```
+
+----------------------------------------
+
+TITLE: Creating New Files with Multi-File Edit Tool
+DESCRIPTION: Describes the specific parameter configuration required to create a new file using the Multi-File Edit tool. The first edit defines the initial content, and subsequent edits operate on this newly created content.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/multiedit.txt#_snippet_1
+
+LANGUAGE: APIDOC
+CODE:
+```
+NewFileCreation:
+  file_path: string (new absolute path, including directory)
+    description: The absolute path for the new file to be created.
+  edits: array of objects
+    description: An array of edit operations.
+    first_edit:
+      old_string: "" (empty string)
+        description: Indicates file creation.
+      new_string: string
+        description: The initial content of the new file.
+    subsequent_edits:
+      old_string: string
+        description: Text to replace within the newly created content.
+      new_string: string
+        description: Edited text.
+      replace_all: boolean (optional, default: false)
+        description: Replace all occurrences of old_string.
+```
+
+----------------------------------------
+
+TITLE: Log out from an opencode provider
+DESCRIPTION: Clears a provider's credentials from the credentials file, effectively logging out.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_6
+
+LANGUAGE: bash
+CODE:
+```
+opencode auth logout
+```
+
+----------------------------------------
+
+TITLE: Configure Local MCP Server in opencode.json
+DESCRIPTION: This JSON configuration snippet demonstrates how to define a local Model Context Protocol (MCP) server within your `opencode.json` file. It specifies the server type as 'local', provides the command to execute the MCP server, and allows for setting environment variables for the command.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/mcp-servers.mdx#_snippet_0
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "localmcp": {
+      "type": "local",
+      "command": ["bun", "x", "my-mcp-command"],
+      "environment": {
+        "MY_ENV_VAR": "my_env_var_value"
+      }
+    }
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Go TUI API Client Generation Command
+DESCRIPTION: This command is crucial for updating the Go client code and OpenAPI specification. It must be executed from the `packages/tui` directory after any modifications to server endpoints in `packages/opencode/src/server/server.ts` to ensure synchronization between the Go TUI and the TypeScript server.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/AGENTS.md#_snippet_1
+
+LANGUAGE: Go
+CODE:
+```
+cd packages/tui && go generate ./pkg/client/
+```
+
+----------------------------------------
+
+TITLE: List authenticated opencode providers
+DESCRIPTION: Displays all providers currently authenticated and stored in the credentials file.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_5
+
+LANGUAGE: bash
+CODE:
+```
+opencode auth list
+```
+
+LANGUAGE: bash
+CODE:
+```
+opencode auth ls
+```
+
+----------------------------------------
+
+TITLE: Regenerate Go Client and OpenAPI Specification
+DESCRIPTION: Commands to regenerate the Go client and OpenAPI specification after making changes to TypeScript API endpoints in the server. This ensures the TUI's Go client is up-to-date with the backend.
+SOURCE: https://github.com/sst/opencode/blob/dev/README.md#_snippet_2
+
+LANGUAGE: bash
+CODE:
+```
+$ cd packages/tui
+$ go generate ./pkg/client/
+```
+
+----------------------------------------
+
+TITLE: opencode run command flags
+DESCRIPTION: Flags available for the `opencode run` command to control session continuation, ID, sharing, and model selection.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_2
+
+LANGUAGE: APIDOC
+CODE:
+```
+--continue, -c: Continue the last session
+--session, -s: Session ID to continue
+--share: Share the session
+--model, -m: Mode to use in the form of provider/model
+```
+
+----------------------------------------
+
+TITLE: Configure Theme in opencode.json
+DESCRIPTION: This JSON snippet demonstrates how to set a theme, specifically 'tokyonight', within your opencode configuration file. The '$schema' property provides validation for the configuration structure.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/themes.mdx#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "tokyonight"
+}
+```
+
+----------------------------------------
+
+TITLE: Viewing GitHub Pull Request Comments via `gh api`
+DESCRIPTION: This command uses the `gh api` subcommand to directly interact with the GitHub API, specifically to retrieve comments associated with a pull request. Replace `foo/bar` with the repository owner/name and `123` with the pull request number.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/bash.txt#_snippet_5
+
+LANGUAGE: Bash
+CODE:
+```
+gh api repos/foo/bar/pulls/123/comments
+```
+
+----------------------------------------
+
+TITLE: Executing Pytest Commands in Bash
+DESCRIPTION: Illustrates the recommended approach for running `pytest` by providing an absolute path to the test directory, which helps maintain the current working directory. It contrasts this with an incorrect method that uses `cd`.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/bash.txt#_snippet_0
+
+LANGUAGE: Bash
+CODE:
+```
+pytest /foo/bar/tests
+```
+
+LANGUAGE: Bash
+CODE:
+```
+cd /foo/bar && pytest tests
+```
+
+----------------------------------------
+
+TITLE: Example: Tool Use and Command Suggestion
+DESCRIPTION: Demonstrates opencode's internal thought process (represented by bracketed text) leading to a command suggestion, showcasing how it might use tools before providing a final answer.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/session/prompt/anthropic.txt#_snippet_3
+
+LANGUAGE: CLI Dialogue
+CODE:
+```
+user: what command should I run to watch files in the current directory?
+assistant: [use the ls tool to list the files in the current directory, then read docs/commands in the relevant file to find out how to watch files]
+npm run dev
+```
+
+----------------------------------------
+
+TITLE: Global opencode CLI flags
+DESCRIPTION: General flags applicable to the opencode CLI for displaying help, version, and printing logs.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/cli.mdx#_snippet_8
+
+LANGUAGE: APIDOC
+CODE:
+```
+--help, -h: Display help
+--version: Print version number
+--print-logs: Print logs to stderr
+```
+
+----------------------------------------
+
+TITLE: Example: Multi-turn File Content Query
+DESCRIPTION: Illustrates a multi-turn interaction where opencode uses internal tools to answer a follow-up question based on previous context, demonstrating its ability to maintain conversational flow.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/session/prompt/anthropic.txt#_snippet_5
+
+LANGUAGE: CLI Dialogue
+CODE:
+```
+user: what files are in the directory src/?
+assistant: [runs ls and sees foo.c, bar.c, baz.c]
+user: which file contains the implementation of foo?
+assistant: src/foo.c
+```
+
+----------------------------------------
+
+TITLE: Example: Basic CLI Command Suggestion
+DESCRIPTION: Shows opencode providing a direct command suggestion for a common task, adhering to the principle of minimal output.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/session/prompt/anthropic.txt#_snippet_2
+
+LANGUAGE: CLI Dialogue
+CODE:
+```
+user: what command should I run to list files in the current directory?
+assistant: ls
+```
+
+----------------------------------------
+
+TITLE: Install opencode binary on Arch Linux with Paru
+DESCRIPTION: Install the opencode binary on Arch Linux systems using the Paru AUR helper for the opencode-bin package.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/src/content/docs/docs/index.mdx#_snippet_3
+
+LANGUAGE: bash
+CODE:
+```
+paru -S opencode-bin
+```
+
+----------------------------------------
+
+TITLE: Example: Concise Arithmetic Response
+DESCRIPTION: Demonstrates opencode's ability to provide direct and concise answers to simple arithmetic queries, avoiding unnecessary preamble or explanation.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/session/prompt/anthropic.txt#_snippet_0
+
+LANGUAGE: CLI Dialogue
+CODE:
+```
+user: 2 + 2
+assistant: 4
+```
+
+LANGUAGE: CLI Dialogue
+CODE:
+```
+user: what is 2+2?
+assistant: 4
+```
+
+----------------------------------------
+
+TITLE: Example: Direct Yes/No Question
+DESCRIPTION: Illustrates opencode's directness in answering binary questions with a simple 'Yes' or 'No' without elaboration.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/session/prompt/anthropic.txt#_snippet_1
+
+LANGUAGE: CLI Dialogue
+CODE:
+```
+user: is 11 a prime number?
+assistant: Yes
+```
+
+----------------------------------------
+
+TITLE: Example: General Knowledge Query
+DESCRIPTION: Highlights opencode's capability to answer general knowledge questions concisely, maintaining its direct communication style.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/session/prompt/anthropic.txt#_snippet_4
+
+LANGUAGE: CLI Dialogue
+CODE:
+```
+user: How many golf balls fit inside a jetta?
+assistant: 150000
+```
+
+----------------------------------------
+
+TITLE: Starlight Project Directory Structure Overview
+DESCRIPTION: This snippet illustrates the standard file and folder layout of an Astro + Starlight project, highlighting where content, assets, and configuration files are typically located.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/web/README.md#_snippet_1
+
+LANGUAGE: Text
+CODE:
+```
+.
+├── public/
+├── src/
+│   ├── assets/
+│   ├── content/
+│   │   ├── docs/
+│   └── content.config.ts
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json
+```
+
+----------------------------------------
+
+TITLE: Print 'Hello World' in Python
+DESCRIPTION: This snippet demonstrates how to print the classic 'Hello World' message to the console using Python. It's a fundamental example for basic output operations.
+SOURCE: https://github.com/sst/opencode/blob/dev/packages/opencode/src/tool/todowrite.txt#_snippet_0
+
+LANGUAGE: python
+CODE:
+```
+print("Hello World")
+```

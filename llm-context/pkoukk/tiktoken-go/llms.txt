@@ -1,0 +1,310 @@
+# METADATA
+# TOKEN_COUNT: 2553
+# DATE_CREATED: 2025-06-26T01:57:44Z
+# REPO: pkoukk/tiktoken-go
+# SOURCE: https://context7.com/pkoukk/tiktoken-go/llms.txt
+#
+TITLE: Get Token Encoding by Model Name in Go
+DESCRIPTION: Illustrates how to retrieve a tiktoken encoding suitable for a specific OpenAI model (e.g., 'gpt-3.5-turbo') using `tiktoken.EncodingForModel`. It then encodes a sample text string and outputs the resulting token slice and the token count.
+SOURCE: https://github.com/pkoukk/tiktoken-go/blob/main/README.md#_snippet_2
+
+LANGUAGE: Go
+CODE:
+```
+package main
+
+import (
+    "fmt"
+    "github.com/pkoukk/tiktoken-go"
+)
+
+func main()  {
+	text := "Hello, world!"
+	encoding := "gpt-3.5-turbo"
+
+	tkm, err := tiktoken.EncodingForModel(encoding)
+	if err != nil {
+		err = fmt.Errorf("getEncoding: %v", err)
+		return
+	}
+
+	// encode
+	token := tkm.Encode(text, nil, nil)
+
+	// tokens
+	fmt.Println(token)
+	// num_tokens
+	fmt.Println(len(token))
+}
+```
+
+----------------------------------------
+
+TITLE: Get Tokens by Model Name in Go
+DESCRIPTION: Illustrates how to obtain the correct encoding for a given OpenAI model name (e.g., 'gpt-3.5-turbo') and use it to encode a text string into tokens. The example prints the resulting token slice and its length.
+SOURCE: https://github.com/pkoukk/tiktoken-go/blob/main/README_zh-hans.md#_snippet_2
+
+LANGUAGE: Go
+CODE:
+```
+package main
+
+import (
+    "fmt"
+    "github.com/pkoukk/tiktoken-go"
+)
+
+func main()  {
+	text := "Hello, world!"
+	encoding := "gpt-3.5-turbo"
+
+	tkm, err := tiktoken.EncodingForModel(encoding)
+	if err != nil {
+		err = fmt.Errorf("getEncoding: %v", err)
+		return
+	}
+
+	// encode
+	token := tkm.Encode(text, nil, nil)
+
+	// tokens
+	fmt.Println(token)
+	// num_tokens
+	fmt.Println(len(token))
+}
+```
+
+----------------------------------------
+
+TITLE: Count Tokens for OpenAI Chat Messages in Go
+DESCRIPTION: Calculates the number of tokens for a list of OpenAI chat messages given a specific model name. It uses the tiktoken-go library and includes model-specific logic based on the OpenAI cookbook examples. Note that token calculation methods may change.
+SOURCE: https://github.com/pkoukk/tiktoken-go/blob/main/README.md#_snippet_3
+
+LANGUAGE: go
+CODE:
+```
+package main
+
+import (
+	"fmt"
+
+	"github.com/pkoukk/tiktoken-go"
+	"github.com/sashabaranov/go-openai"
+)
+
+// OpenAI Cookbook: https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
+func NumTokensFromMessages(messages []openai.ChatCompletionMessage, model string) (numTokens int) {
+	tkm, err := tiktoken.EncodingForModel(model)
+	if err != nil {
+		err = fmt.Errorf("encoding for model: %v", err)
+		log.Println(err)
+		return
+	}
+
+	var tokensPerMessage, tokensPerName int
+	switch model {
+	case "gpt-3.5-turbo-0613",
+		"gpt-3.5-turbo-16k-0613",
+		"gpt-4-0314",
+		"gpt-4-32k-0314",
+		"gpt-4-0613",
+		"gpt-4-32k-0613":
+		tokensPerMessage = 3
+		tokensPerName = 1
+	case "gpt-3.5-turbo-0301":
+		tokensPerMessage = 4 // every message follows <|start|>{role/name}\n{content}<|end|>\n
+		tokensPerName = -1   // if there's a name, the role is omitted
+	default:
+		if strings.Contains(model, "gpt-3.5-turbo") {
+			log.Println("warning: gpt-3.5-turbo may update over time. Returning num tokens assuming gpt-3.5-turbo-0613.")
+			return NumTokensFromMessages(messages, "gpt-3.5-turbo-0613")
+		} else if strings.Contains(model, "gpt-4") {
+			log.Println("warning: gpt-4 may update over time. Returning num tokens assuming gpt-4-0613.")
+			return NumTokensFromMessages(messages, "gpt-4-0613")
+		} else {
+			err = fmt.Errorf("num_tokens_from_messages() is not implemented for model %s. See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.", model)
+			log.Println(err)
+			return
+		}
+	}
+
+	for _, message := range messages {
+		numTokens += tokensPerMessage
+		numTokens += len(tkm.Encode(message.Content, nil, nil))
+		numTokens += len(tkm.Encode(message.Role, nil, nil))
+		numTokens += len(tkm.Encode(message.Name, nil, nil))
+		if message.Name != "" {
+			numTokens += tokensPerName
+		}
+	}
+	numTokens += 3 // every reply is primed with <|start|>assistant<|message|>
+	return numTokens
+}
+```
+
+----------------------------------------
+
+TITLE: Calculate Chat Message Tokens for OpenAI API in Go
+DESCRIPTION: Provides a Go function `NumTokensFromMessages` to estimate the token count for a list of OpenAI chat completion messages based on the specified model. It notes that the calculation method is based on an official example and may change over time. Requires the `github.com/sashabaranov/go-openai` library.
+SOURCE: https://github.com/pkoukk/tiktoken-go/blob/main/README_zh-hans.md#_snippet_3
+
+LANGUAGE: Go
+CODE:
+```
+package main
+
+import (
+	"fmt"
+
+	"github.com/pkoukk/tiktoken-go"
+	"github.com/sashabaranov/go-openai"
+)
+
+func NumTokensFromMessages(messages []openai.ChatCompletionMessage, model string) (numTokens int) {
+	tkm, err := tiktoken.EncodingForModel(model)
+	if err != nil {
+		err = fmt.Errorf("encoding for model: %v", err)
+		log.Println(err)
+		return
+	}
+
+	var tokensPerMessage, tokensPerName int
+	switch model {
+	case "gpt-3.5-turbo-0613",
+		"gpt-3.5-turbo-16k-0613",
+		"gpt-4-0314",
+		"gpt-4-32k-0314",
+		"gpt-4-0613",
+		"gpt-4-32k-0613":
+		tokensPerMessage = 3
+		tokensPerName = 1
+	case "gpt-3.5-turbo-0301":
+		tokensPerMessage = 4 // every message follows <|start|>{role/name}\n{content}<|end|>\n
+		tokensPerName = -1   // if there's a name, the role is omitted
+	default:
+		if strings.Contains(model, "gpt-3.5-turbo") {
+			log.Println("warning: gpt-3.5-turbo may update over time. Returning num tokens assuming gpt-3.5-turbo-0613.")
+			return NumTokensFromMessages(messages, "gpt-3.5-turbo-0613")
+		} else if strings.Contains(model, "gpt-4") {
+			log.Println("warning: gpt-4 may update over time. Returning num tokens assuming gpt-4-0613.")
+			return NumTokensFromMessages(messages, "gpt-4-0613")
+		} else {
+			err = fmt.Errorf("num_tokens_from_messages() is not implemented for model %s. See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.", model)
+			log.Println(err)
+			return
+		}
+	}
+
+	for _, message := range messages {
+		numTokens += tokensPerMessage
+		numTokens += len(tkm.Encode(message.Content, nil, nil))
+		numTokens += len(tkm.Encode(message.Role, nil, nil))
+		numTokens += len(tkm.Encode(message.Name, nil, nil))
+		if message.Name != "" {
+			numTokens += tokensPerName
+		}
+	}
+	numTokens += 3 // every reply is primed with <|start|>assistant<|message|>
+	return numTokens
+}
+```
+
+----------------------------------------
+
+TITLE: Get Token Encoding by Name in Go
+DESCRIPTION: Demonstrates how to obtain a tiktoken encoding by its specific name (e.g., 'cl100k_base') using `tiktoken.GetEncoding`. It then encodes a sample text string and prints the resulting token slice and the number of tokens.
+SOURCE: https://github.com/pkoukk/tiktoken-go/blob/main/README.md#_snippet_1
+
+LANGUAGE: Go
+CODE:
+```
+package main
+
+import (
+    "fmt"
+    "github.com/pkoukk/tiktoken-go"
+)
+
+func main()  {
+	text := "Hello, world!"
+	encoding := "cl100k_base"
+
+	// if you don't want download dictionary at runtime, you can use offline loader
+	// tiktoken.SetBpeLoader(tiktoken_loader.NewOfflineLoader())
+	tke, err := tiktoken.GetEncoding(encoding)
+	if err != nil {
+		err = fmt.Errorf("getEncoding: %v", err)
+		return
+	}
+
+	// encode
+	token := tke.Encode(text, nil, nil)
+
+	//tokens
+	fmt.Println((token))
+	// num_tokens
+	fmt.Println(len(token))
+}
+```
+
+----------------------------------------
+
+TITLE: Get Tokens by Encoding Name in Go
+DESCRIPTION: Demonstrates how to retrieve a specific encoding by its name (e.g., 'cl100k_base') and use it to encode a text string into a slice of tokens. It also shows how to print the resulting tokens and their count. An optional offline loader is mentioned.
+SOURCE: https://github.com/pkoukk/tiktoken-go/blob/main/README_zh-hans.md#_snippet_1
+
+LANGUAGE: Go
+CODE:
+```
+package main
+
+import (
+	"fmt"
+	"github.com/pkoukk/tiktoken-go"
+)
+
+func main()  {
+	text := "Hello, world!"
+	encoding := "cl100k_base"
+
+	// 如果你不想在运行时下载字典，你可以使用离线加载器
+	// tiktoken.SetBpeLoader(tiktoken_loader.NewOfflineLoader())
+	tke, err := tiktoken.GetEncoding(encoding)
+	if err != nil {
+		err = fmt.Errorf("getEncoding: %v", err)
+		return
+	}
+
+	// encode
+	token := tke.Encode(text, nil, nil)
+
+	//tokens
+	fmt.Println((token))
+	// num_tokens
+	fmt.Println(len(token))
+}
+```
+
+----------------------------------------
+
+TITLE: Install tiktoken-go using Go Get
+DESCRIPTION: Installs the tiktoken-go library using the standard Go package manager command `go get`. This command fetches the library from its GitHub repository and adds it to your Go workspace.
+SOURCE: https://github.com/pkoukk/tiktoken-go/blob/main/README.md#_snippet_0
+
+LANGUAGE: Bash
+CODE:
+```
+go get github.com/pkoukk/tiktoken-go
+```
+
+----------------------------------------
+
+TITLE: Install tiktoken-go Library
+DESCRIPTION: Use the standard Go command to fetch and install the tiktoken-go library from its GitHub repository.
+SOURCE: https://github.com/pkoukk/tiktoken-go/blob/main/README_zh-hans.md#_snippet_0
+
+LANGUAGE: Bash
+CODE:
+```
+go get github.com/pkoukk/tiktoken-go
+```

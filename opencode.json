@@ -8,6 +8,13 @@
       ],
       "environment": {}
     },
+    "document-downloader": {
+      "type": "local",
+      "command": [
+        "./docs4context-com"
+      ],
+      "environment": {}
+    },
     "remotemcp": {
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
