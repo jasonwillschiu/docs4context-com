@@ -162,6 +162,20 @@ const shouldRelease = values.release;
 
 // --- Helper Functions ---
 
+/**
+ * Generates a properly quoted -ldflags string so that it is treated as a
+ * single argument by the shell.  Each key is written in -X=key=value form
+ * to avoid accidental token splitting.
+ *
+ * @param {string} version
+ * @param {string} buildDate
+ * @param {string} gitCommit
+ * @returns {string} ldflags eg. "-X=main.Version=0.1.3 -X=main.BuildDate=…"
+ */
+function generateLdflags(version, buildDate, gitCommit) {
+  return `-X=main.Version=${version} -X=main.BuildDate=${buildDate} -X=main.GitCommit=${gitCommit}`;
+}
+
 /** Builds Go binaries for all supported platforms with version info */
 async function buildCrossPlatform(version = null) {
   const platforms = [
@@ -192,9 +206,10 @@ async function buildCrossPlatform(version = null) {
       mainSpinner.update({ text: `🔨 Building ${platform.name}...` });
       
       // Create ldflags for build info
-      const ldflags = `-X main.Version=${buildVersion} -X main.BuildDate=${buildDate} -X main.GitCommit=${gitCommit}`;
-      
-      const buildResult = await $`go build -ldflags ${ldflags} -o bin/${platform.name} .`
+      const ldflags = generateLdflags(buildVersion, buildDate, gitCommit);
+
+      // Quote the ldflags string so it is passed as a single argument
+      const buildResult = await $`go build -ldflags "${ldflags}" -o bin/${platform.name} .`
         .env({ 
           ...process.env, 
           GOOS: platform.os, 
@@ -361,9 +376,10 @@ async function buildLocal() {
     const gitCommit = gitCommitResult.exitCode === 0 ? gitCommitResult.stdout.toString().trim() : 'unknown';
     
     // Create ldflags for build info
-    const ldflags = `-X main.Version=dev -X main.BuildDate=${buildDate} -X main.GitCommit=${gitCommit}`;
-    
-    const buildResult = await $`go build -ldflags ${ldflags} -o docs4context-com .`
+    const ldflags = generateLdflags('dev', buildDate, gitCommit);
+
+    // Quote the ldflags string so it is passed as a single argument
+    const buildResult = await $`go build -ldflags "${ldflags}" -o docs4context-com .`
       .env({ ...process.env, CGO_ENABLED: '0' })
       .nothrow();
       

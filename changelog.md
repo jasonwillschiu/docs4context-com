@@ -1,3 +1,6 @@
+# 0.1.3 - Fix: cicd.js to use correct version
+- previously was broken in 0.1.2 and 0.1.3
+
 # 0.1.3 - Add: install docs are for cursor or claude code
 - using the two most common clients
 - and to test the updater function
