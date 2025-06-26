@@ -15,23 +15,64 @@ Both servers use the `github.com/mark3labs/mcp-go` framework with stdio transpor
 
 ### Build
 ```bash
-# Build main server
+# Build for current platform (development version)
 go build -o docs4context-com .
 
-# Build calculator server  
-cd calculator-mcp && go build -o calculator-mcp .
+# Build for all platforms using cicd script
+bun run cicd.js --build
 
-# Build both
-go build -o docs4context-com . && cd calculator-mcp && go build -o calculator-mcp .
+# Build with version information (production)
+bun run cicd.js --build --commit --tag --release
+
+# Build and run locally
+bun run cicd.js --mode build
+bun run cicd.js --mode dev
+```
+
+### Cross-Platform Distribution
+```bash
+# Build binaries for all platforms
+bun run cicd.js --build
+
+# Creates binaries in bin/ directory:
+# - docs4context-com-darwin-amd64
+# - docs4context-com-darwin-arm64  
+# - docs4context-com-linux-amd64
+# - docs4context-com-linux-arm64
+# - docs4context-com-windows-amd64.exe
+# - docs4context-com-windows-arm64.exe
+```
+
+### Installation & Upgrades
+```bash
+# One-line install (latest release)
+curl -fsSL https://raw.githubusercontent.com/jasonwillschiu/docs4context-com/main/install.sh | sh
+
+# Install specific version
+curl -fsSL https://raw.githubusercontent.com/jasonwillschiu/docs4context-com/main/install.sh | sh -s -- --version 0.1.2
+
+# Check current version
+docs4context-com --version
+
+# Check for updates
+docs4context-com --check-updates
+
+# Auto-update to latest version
+docs4context-com --update
+
+# Manual install
+# 1. Download appropriate binary from GitHub releases
+# 2. Copy to ~/.local/bin/docs4context-com
+# 3. Make executable: chmod +x ~/.local/bin/docs4context-com
 ```
 
 ### Test
 ```bash
-# Run calculator integration test
-./test-calculator-integration.sh
-
 # Install/update dependencies
 go mod tidy
+
+# Test local build
+./docs4context-com
 ```
 
 ### Run
@@ -39,8 +80,8 @@ go mod tidy
 # Run main docs4context server
 ./docs4context-com
 
-# Run calculator server
-./calculator-mcp/calculator-mcp
+# Or if installed globally
+docs4context-com
 ```
 
 ## Architecture
@@ -61,6 +102,49 @@ go mod tidy
 - Primary: `github.com/mark3labs/mcp-go v0.32.0`
 - Token counting: `github.com/pkoukk/tiktoken-go v0.1.7`
 - Go version: 1.24.2
+
+## Distribution Strategy
+
+This MCP server is distributed as **pre-built binaries** for easy installation:
+
+### Platform Support
+- **macOS**: Intel (amd64) and Apple Silicon (arm64)
+- **Linux**: Intel/AMD (amd64) and ARM (arm64)  
+- **Windows**: Intel/AMD (amd64) and ARM (arm64)
+
+### Installation Methods
+
+#### 1. One-Line Install (Recommended)
+```bash
+curl -fsSL https://raw.githubusercontent.com/jasonwillschiu/docs4context-com/main/install.sh | sh
+```
+
+#### 2. Manual Download
+- Download appropriate binary from `bin/` directory
+- Copy to `~/.local/bin/docs4context-com`
+- Make executable and add to PATH
+
+#### 3. Build from Source
+```bash
+git clone https://github.com/jasonwillschiu/docs4context-com
+cd docs4context-com
+go build -o docs4context-com .
+```
+
+### MCP Client Configuration
+
+Add to your MCP client config (e.g., `opencode.json`):
+```json
+{
+  "mcp": {
+    "docs4context": {
+      "type": "local",
+      "command": ["docs4context-com"],
+      "environment": {}
+    }
+  }
+}
+```
 
 ## MCP Tools Available
 
@@ -97,10 +181,23 @@ go mod tidy
 - Search tools automatically skip metadata header lines when parsing content
 
 ### Configuration
-The project integrates with opencode via `opencode.json`:
-- `document-downloader` points to main server
-- `localmcp` points to calculator server  
-- `remotemcp` connects to context7.com MCP service
+The project integrates with MCP clients via standard configuration:
+- `docs4context` points to main server binary
+- Can be used alongside other MCP servers
+- Supports both local and remote MCP configurations
+
+Example `opencode.json`:
+```json
+{
+  "mcp": {
+    "docs4context": {
+      "type": "local",
+      "command": ["docs4context-com"],
+      "environment": {}
+    }
+  }
+}
+```
 
 ## Usage Patterns for AI Agents
 
@@ -139,6 +236,63 @@ The project integrates with opencode via `opencode.json`:
 **Context-Aware:** Search results include line numbers and surrounding context for precise code location
 
 **Cross-Project:** Single MCP server can search across all downloaded repositories regardless of current working directory
+
+## Versioning & Release Management
+
+### Version Information
+- **Version Source**: `changelog.md` is the single source of truth
+- **Version Format**: Semantic versioning (e.g., `0.1.2`)
+- **Build Info**: Embedded in binaries via Go build flags
+- **Auto-Update**: Built-in update mechanism via GitHub releases
+
+### Development Workflow
+```bash
+# Local development
+bun run cicd.js --mode dev
+
+# Build for current platform
+bun run cicd.js --mode build
+
+# Cross-platform builds with version info
+bun run cicd.js --build
+
+# Git operations
+bun run cicd.js --commit --tag --push
+
+# Create GitHub release
+bun run cicd.js --release
+
+# Full release workflow
+bun run cicd.js --build --commit --tag --push --release
+```
+
+### Release Process
+1. **Update Version**: Edit `changelog.md` with new version and changes
+2. **Build & Release**: Run `bun run cicd.js --build --commit --tag --push --release`
+3. **Verify**: Check GitHub release page and test auto-update
+4. **Announce**: Update documentation and notify users
+
+### Version Commands
+```bash
+# Check version information
+docs4context-com --version
+
+# Check for available updates
+docs4context-com --check-updates
+
+# Update to latest version
+docs4context-com --update
+
+# Show help
+docs4context-com --help
+```
+
+### Troubleshooting Updates
+- **Update fails**: Binary creates backup automatically, restores on failure
+- **Version mismatch**: Use `--check-updates` to verify latest version
+- **Network issues**: Install script supports both curl and wget
+- **Permission errors**: Ensure binary has execute permissions
+- **GitHub API limits**: Rate limits may affect update checks
 
 ## Migration from Bash Functions
 

@@ -18,7 +18,9 @@
       "Bash(go get:*)",
       "mcp__docs4context__search_titles",
       "mcp__docs4context__search_content",
-      "mcp__docs4context__get_topic_details"
+      "mcp__docs4context__get_topic_details",
+      "Bash(mkdir:*)",
+      "Bash(bun run:*)"
     ],
     "deny": []
   }
