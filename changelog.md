@@ -1,3 +1,6 @@
+# 0.1.9 - Update: README.md, more accurate description
+- previous ai summary overstated what this repo could do
+
 # 0.1.8 - Update: README.md, some extra clarify
 - installs to your current folder
 

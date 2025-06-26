@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a collection of MCP (Model Context Protocol) servers providing tools for LLM agents:
 
-1. **Main docs4context server** (`main.go`) - Downloads repository context documents from GitHub via context7.com with token counting and semantic search capabilities
+1. **Main docs4context server** (`main.go`) - A local client for context7.com that downloads and provides basic search/filtering tools for repository context documents (llms.txt files)
 2. **Calculator MCP server** (`calculator-mcp/main.go`) - Provides arithmetic operations
 
 Both servers use the `github.com/mark3labs/mcp-go` framework with stdio transport.
@@ -221,21 +221,21 @@ Create or update `opencode.json`:
 ## MCP Tools Available
 
 ### Document Management
-- **`save_context_document`** - Downloads repository context with accurate token counting
+- **`save_context_document`** - Downloads pre-processed llms.txt files from context7.com with accurate token counting
 
 ### Search & Discovery Tools
-- **`search_titles`** - Find topics by title keywords with optional repo filtering
-- **`search_content`** - Search across descriptions and code content with context
-- **`get_topic_details`** - Extract complete topic information from specific line numbers
-- **`list_repositories`** - Show all available repositories with metadata and topic counts
-- **`analyze_keywords`** - Cross-repository keyword frequency analysis with relevance scoring
+- **`search_titles`** - Find topics by title keywords with optional repo filtering in local documents
+- **`search_content`** - Search across descriptions and code content in locally stored context documents
+- **`get_topic_details`** - Extract complete topic information from specific line numbers in local files
+- **`list_repositories`** - Show all locally downloaded repositories with metadata and topic counts
+- **`analyze_keywords`** - Cross-repository keyword frequency analysis across local documents with relevance scoring
 
-## Enhanced Context Document Flow
+## Context Document Flow
 
 1. Tool receives GitHub URL (accepts both full URLs and `username/repo` format)
-2. Downloads context document from `https://context7.com/[username]/[repo]/llms.txt`
+2. Downloads pre-processed context document from `https://context7.com/[username]/[repo]/llms.txt`
 3. **Counts actual tokens** using tiktoken-go with cl100k_base encoding (GPT-4 compatible)
-4. **Saves with metadata header**:
+4. **Saves locally with metadata header**:
    ```
    # METADATA
    # TOKEN_COUNT: 66551
@@ -244,13 +244,15 @@ Create or update `opencode.json`:
    # SOURCE: https://context7.com/mark3labs/mcp-go/llms.txt
    #
    ```
-5. Stores to `llm-context/[username]/[repo]/llms.txt` with proper permissions
+5. Stores to local `llm-context/[username]/[repo]/llms.txt` with proper permissions
+6. Provides basic search and filtering capabilities across locally stored documents
 
 ### MCP Protocol Requirements
 - All logging must go to stderr (stdout interferes with MCP communication)
 - Tool responses must include operation results and file paths
 - Error handling should be comprehensive with descriptive messages
-- Search tools automatically skip metadata header lines when parsing content
+- Search tools automatically skip metadata header lines when parsing local content
+- All operations work on locally stored context documents
 
 ### Configuration
 The project integrates with MCP clients via standard configuration:
@@ -306,11 +308,11 @@ claude mcp add docs4context -- docs4context-com
 
 ### Repository Discovery Workflow
 ```
-1. Use list_repositories to see available context documents
-2. Use analyze_keywords to find repos relevant to user query
-3. Use search_titles for specific topic discovery
-4. Use search_content for detailed code/implementation search
-5. Use get_topic_details to extract complete information
+1. Use list_repositories to see locally available context documents
+2. Use analyze_keywords to find local repos relevant to user query
+3. Use search_titles for specific topic discovery in local documents
+4. Use search_content for detailed code/implementation search in local files
+5. Use get_topic_details to extract complete information from local context
 ```
 
 ### Example Agent Commands
@@ -332,29 +334,29 @@ claude mcp add docs4context -- docs4context-com
 
 #### Learning New Framework Pattern
 ```
-1. save_context_document("framework/repo")
-2. search_titles("getting started")
-3. search_content("example implementation")
-4. get_topic_details for specific implementation examples
-5. search_titles("best practices") for advanced patterns
+1. save_context_document("framework/repo") - downloads llms.txt from context7.com
+2. search_titles("getting started") - searches local document
+3. search_content("example implementation") - searches local content
+4. get_topic_details for specific implementation examples from local file
+5. search_titles("best practices") for advanced patterns in local document
 ```
 
 #### Cross-Repository Analysis Pattern  
 ```
-1. save_context_document for multiple related repositories
-2. analyze_keywords("error handling") to find relevant repos
-3. search_content("error patterns") across all repos
-4. get_topic_details for specific implementations
-5. Compare approaches across different repositories
+1. save_context_document for multiple related repositories (downloads multiple llms.txt files)
+2. analyze_keywords("error handling") to find relevant local documents
+3. search_content("error patterns") across all local context files
+4. get_topic_details for specific implementations from local documents
+5. Compare approaches across different locally stored repositories
 ```
 
 #### API Discovery Pattern
 ```
-1. list_repositories to see available options
-2. search_titles("API") or search_titles("endpoints")
-3. search_content("REST API setup") for implementation details
-4. get_topic_details for complete API examples
-5. search_content("authentication") for security patterns
+1. list_repositories to see locally available options
+2. search_titles("API") or search_titles("endpoints") in local documents
+3. search_content("REST API setup") for implementation details in local files
+4. get_topic_details for complete API examples from local context
+5. search_content("authentication") for security patterns in local documents
 ```
 
 ### Real-World Usage Examples
@@ -405,11 +407,13 @@ AI Agent workflow:
 
 **Agent-Friendly:** AI agents can directly call MCP tools instead of executing bash commands
 
-**Rich Metadata:** Each repository includes accurate token counts, download timestamps, and semantic analysis
+**Rich Metadata:** Each locally stored repository includes accurate token counts, download timestamps, and source information
 
-**Context-Aware:** Search results include line numbers and surrounding context for precise code location
+**Context-Aware:** Search results include line numbers and surrounding context for precise code location in local files
 
-**Cross-Project:** Single MCP server can search across all downloaded repositories regardless of current working directory
+**Cross-Project:** Single MCP server can search across all locally downloaded repositories regardless of current working directory
+
+**Local Access:** All operations work on locally stored context documents, no network calls needed for search operations
 
 ## Versioning & Release Management
 

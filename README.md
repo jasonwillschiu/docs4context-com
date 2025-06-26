@@ -1,8 +1,8 @@
 # docs4context
 
-**AI-Powered Repository Context Discovery & Search**
+**Local Context7 Client for AI Agents**
 
-docs4context is a Model Context Protocol (MCP) server that provides AI agents with powerful tools to download, index, and search repository documentation. It enables semantic search across multiple GitHub repositories, helping AI assistants understand codebases more effectively.
+docs4context is a Model Context Protocol (MCP) server that provides AI agents with tools to download and search repository context documents from context7.com. It offers basic lookup and filtering capabilities for locally stored context documents, making repository documentation accessible to AI assistants without requiring full repository downloads.
 
 ## 🚀 Quick Start
 
@@ -51,17 +51,17 @@ Download the context for the repository "mark3labs/mcp-go"
 
 ## ✨ Features
 
-### 🔍 **Intelligent Repository Search**
-- Semantic search across repository documentation
+### 🔍 **Context7 Document Access**
+- Download pre-processed context documents from context7.com
+- Search across locally stored context documents
 - Cross-repository keyword analysis
-- Topic-based content discovery
-- Context-aware search results
+- Topic-based content discovery with line number references
 
-### 📊 **Token-Aware Context Management**
+### 📊 **Local Context Management**
 - Accurate token counting using GPT-4 compatible encoding
-- Smart context document organization
+- Local storage of context7.com llms.txt files
 - Metadata tracking for each repository
-- Efficient storage and retrieval
+- Efficient local search and retrieval
 
 ### 🔧 **AI Agent Integration**
 - Native MCP (Model Context Protocol) support
@@ -240,20 +240,20 @@ The server uses stdio transport and works with any MCP-compatible client. Genera
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   AI Assistant  │    │  docs4context    │    │  GitHub Repos   │
+│   AI Assistant  │    │  docs4context    │    │   context7.com  │
 │                 │    │     Server       │    │                 │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
          │                        │                        │
          │ 1. "Download gin-gonic/gin"                     │
          ├───────────────────────►│                        │
-         │                        │ 2. Fetch context       │
+         │                        │ 2. Fetch llms.txt      │
          │                        ├───────────────────────►│
          │                        │                        │
-         │                        │ 3. Save with metadata  │
+         │                        │ 3. Save locally        │
          │                        │                        │
          │ 4. "Search for auth"   │                        │
          ├───────────────────────►│                        │
-         │                        │ 5. Search titles/content
+         │                        │ 5. Search local content
          │                        │                        │
          │ 6. Results with line numbers                     │
          │◄───────────────────────┤                        │
@@ -279,18 +279,18 @@ The server uses stdio transport and works with any MCP-compatible client. Genera
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   AI Assistant  │    │  docs4context    │    │   Multiple      │
-│                 │    │     Server       │    │   Repositories  │
+│   AI Assistant  │    │  docs4context    │    │   context7.com  │
+│                 │    │     Server       │    │                 │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
          │                        │                        │
          │ 1. Download multiple repos                      │
          ├───────────────────────►│                        │
-         │                        │ 2. Fetch & index all  │
+         │                        │ 2. Fetch llms.txt files│
          │                        ├───────────────────────►│
          │                        │                        │
          │ 3. "Analyze keyword: error"                     │
          ├───────────────────────►│                        │
-         │                        │ 4. Cross-repo analysis │
+         │                        │ 4. Search local files │
          │                        │                        │
          │ 5. Frequency & relevance scores                 │
          │◄───────────────────────┤                        │
@@ -298,7 +298,7 @@ The server uses stdio transport and works with any MCP-compatible client. Genera
          │ 6. "Search error handling in Go projects"       │
          ├───────────────────────►│                        │
          │                        │                        │
-         │ 7. Pattern examples from all repos              │
+         │ 7. Pattern examples from local context          │
          │◄───────────────────────┤                        │
 ```
 
@@ -316,27 +316,28 @@ The server uses stdio transport and works with any MCP-compatible client. Genera
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   AI Assistant  │    │  docs4context    │    │   Target Repo   │
-│                 │    │     Server       │    │                 │
+│   AI Assistant  │    │  docs4context    │    │   Local Context │
+│                 │    │     Server       │    │    Documents    │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
          │                        │                        │
          │ 1. "What repos are available?"                  │
          ├───────────────────────►│                        │
-         │                        │                        │
-         │ 2. List all downloaded repos                    │
+         │                        │ 2. Check local storage│
+         │                        ├───────────────────────►│
+         │ 3. List all local repos                         │
          │◄───────────────────────┤                        │
          │                        │                        │
-         │ 3. "Search for websocket implementation"        │
+         │ 4. "Search for websocket implementation"        │
          ├───────────────────────►│                        │
-         │                        │ 4. Search across all repos
-         │                        │                        │
-         │ 5. WebSocket topics found                       │
+         │                        │ 5. Search local files │
+         │                        ├───────────────────────►│
+         │ 6. WebSocket topics found                       │
          │◄───────────────────────┤                        │
          │                        │                        │
-         │ 6. "Get complete WebSocket setup guide"         │
+         │ 7. "Get complete WebSocket setup guide"         │
          ├───────────────────────►│                        │
          │                        │                        │
-         │ 7. Detailed implementation guide                │
+         │ 8. Detailed implementation guide                │
          │◄───────────────────────┤                        │
 ```
 
@@ -351,11 +352,10 @@ The server uses stdio transport and works with any MCP-compatible client. Genera
 ## 🔧 How It Works
 
 ### Context Document Flow
-1. **Download**: Fetches repository context from context7.com
+1. **Download**: Fetches pre-processed llms.txt files from context7.com
 2. **Process**: Counts tokens using GPT-4 compatible encoding
-3. **Store**: Saves with metadata headers including token count, date, and source
-4. **Index**: Creates searchable index for fast retrieval
-5. **Search**: Provides semantic search across all stored documents
+3. **Store**: Saves locally with metadata headers including token count, date, and source
+4. **Search**: Provides basic search and filtering across locally stored documents
 
 ### File Structure
 ```
