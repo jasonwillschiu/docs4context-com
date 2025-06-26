@@ -148,17 +148,21 @@ const { values } = parseArgs({
     tag: { type: 'boolean', default: false },
     push: { type: 'boolean', default: false },
     release: { type: 'boolean', default: false },
+    'full-release': { type: 'boolean', default: false },
   },
   strict: false,
   allowPositionals: false,
 });
 
 const mode = values.mode;
-const shouldBuild = values.build;
-const shouldCommit = values.commit;
-const shouldTag = values.tag;
-const shouldPush = values.push;
-const shouldRelease = values.release;
+const isFullRelease = values['full-release'];
+
+// Set individual flags - override with full-release if specified
+const shouldBuild = values.build || isFullRelease;
+const shouldCommit = values.commit || isFullRelease;
+const shouldTag = values.tag || isFullRelease;
+const shouldPush = values.push || isFullRelease;
+const shouldRelease = values.release || isFullRelease;
 
 // --- Helper Functions ---
 
@@ -563,6 +567,7 @@ if (mode === 'dev') {
   console.log(cyan("  bun run cicd.js --build                           # Cross-platform builds"));
   console.log(cyan("  bun run cicd.js [--commit] [--tag] [--push]       # Git operations"));
   console.log(cyan("  bun run cicd.js --release                         # Create GitHub release"));
-  console.log(cyan("  bun run cicd.js --build --commit --tag --release  # Full release flow"));
+  console.log(cyan("  bun run cicd.js --full-release                    # Complete release workflow"));
+  console.log(cyan("  bun run cicd.js --build --commit --tag --release  # Same as --full-release"));
   process.exit(1);
 }

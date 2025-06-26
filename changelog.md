@@ -1,3 +1,7 @@
+# 0.1.6 - Add: cicd.js --full-release flag
+- full-release does: --build --commit --tag --push --release
+- previously likely releasing without build
+
 # 0.1.5 - Fix: version comparison logic and updater process
 - Fixed semantic version comparison in updater.go to properly detect newer versions
 - Fixed CICD build process to correctly embed changelog version into binaries
