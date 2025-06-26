@@ -1,3 +1,6 @@
+# 0.1.8 - Update: README.md, some extra clarify
+- installs to your current folder
+
 # 0.1.7 - Add: README.md
 - detailed instructions on how to use docs4context mcp server
 

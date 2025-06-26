@@ -1,12 +1,13 @@
-# docs4context-com
+# docs4context
 
 **AI-Powered Repository Context Discovery & Search**
 
-docs4context-com is a Model Context Protocol (MCP) server that provides AI agents with powerful tools to download, index, and search repository documentation. It enables semantic search across multiple GitHub repositories, helping AI assistants understand codebases more effectively.
+docs4context is a Model Context Protocol (MCP) server that provides AI agents with powerful tools to download, index, and search repository documentation. It enables semantic search across multiple GitHub repositories, helping AI assistants understand codebases more effectively.
 
 ## 🚀 Quick Start
 
 ### One-Line Installation
+This installs into your current folder as a standalone executable.
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jasonwillschiu/docs4context-com/main/install.sh | sh
 ```
@@ -180,7 +181,7 @@ Create or update `opencode.json`:
 {
   "mcp": {
     "docs4context": {
-      "type": "local", 
+      "type": "local",
       "command": ["docs4context-com"],
       "environment": {}
     }
@@ -213,11 +214,11 @@ The server uses stdio transport and works with any MCP-compatible client. Genera
 - **`search_titles`** - Find topics by title keywords
   - Optional repository filtering
   - Returns matching topics with line numbers
-  
+
 - **`search_content`** - Search descriptions and code content
   - Full-text search across repository content
   - Context-aware results with surrounding text
-  
+
 - **`get_topic_details`** - Extract complete topic information
   - Retrieve detailed content from specific line numbers
   - Includes surrounding context for better understanding
@@ -226,7 +227,7 @@ The server uses stdio transport and works with any MCP-compatible client. Genera
 - **`list_repositories`** - Show all available repositories
   - Displays metadata and topic counts
   - Helps discover what's already downloaded
-  
+
 - **`analyze_keywords`** - Cross-repository keyword analysis
   - Frequency analysis across all repositories
   - Relevance scoring for better search results
