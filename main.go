@@ -55,6 +55,20 @@ func main() {
 		fmt.Println("")
 		fmt.Println("This is an MCP (Model Context Protocol) server that provides")
 		fmt.Println("document context and search tools for AI agents.")
+		fmt.Println("")
+		fmt.Println("---")
+		fmt.Println("")
+		fmt.Println("Claude Configuration:")
+		fmt.Println("  claude mcp add context7 -- npx -y docs4context-com")
+		fmt.Println("")
+		fmt.Println("Cursor Configuration (in mcp.json):")
+		fmt.Println(`  "context7": {`)
+		fmt.Println(`    "command": "npx",`)
+		fmt.Println(`    "args": [`)
+		fmt.Println(`      "-y",`)
+		fmt.Println(`      "docs4context-com"`)
+		fmt.Println(`    ]`)
+		fmt.Println(`  }`)
 		return
 	}
 
@@ -99,6 +113,7 @@ func main() {
 		
 		fmt.Println("Update completed successfully!")
 		fmt.Println("Please restart the application to use the new version")
+		fmt.Println("Run with --help to see how to configure your AI agent")
 		return
 	}
 

@@ -1,3 +1,7 @@
+# 0.1.3 - Add: install docs are for cursor or claude code
+- using the two most common clients
+- and to test the updater function
+
 # 0.1.2 - Add: install.sh script to use mcp server
 - compiling to 6 architectures, windows/macos/linux in arm/amd64
 - install script created
