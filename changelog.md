@@ -1,3 +1,6 @@
+# 0.1.7 - Add: README.md
+- detailed instructions on how to use docs4context mcp server
+
 # 0.1.6 - Add: cicd.js --full-release flag
 - full-release does: --build --commit --tag --push --release
 - previously likely releasing without build

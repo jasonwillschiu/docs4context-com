@@ -133,7 +133,79 @@ go build -o docs4context-com .
 
 ### MCP Client Configuration
 
-Add to your MCP client config (e.g., `opencode.json`):
+#### Claude Code
+Use the CLI command to add the server:
+```bash
+# For local installation
+claude mcp add docs4context -- docs4context-com
+
+# Alternative: Remote server (if available)
+# claude mcp add --transport sse docs4context https://your-server-url/sse
+```
+
+#### Cursor
+Add to your `mcp.json` configuration file:
+```json
+{
+  "mcpServers": {
+    "docs4context": {
+      "command": "docs4context-com",
+      "args": []
+    }
+  }
+}
+```
+
+Alternative configurations:
+```json
+// Using npx (if not globally installed)
+{
+  "mcpServers": {
+    "docs4context": {
+      "command": "npx",
+      "args": ["-y", "docs4context-com"]
+    }
+  }
+}
+
+// Using bunx
+{
+  "mcpServers": {
+    "docs4context": {
+      "command": "bunx", 
+      "args": ["-y", "docs4context-com"]
+    }
+  }
+}
+```
+
+#### Windsurf
+Add to your MCP configuration:
+```json
+{
+  "mcpServers": {
+    "docs4context": {
+      "command": "docs4context-com",
+      "args": []
+    }
+  }
+}
+```
+
+Alternative for npx:
+```json
+{
+  "mcpServers": {
+    "docs4context": {
+      "command": "npx",
+      "args": ["-y", "docs4context-com"]
+    }
+  }
+}
+```
+
+#### OpenCode
+Create or update `opencode.json`:
 ```json
 {
   "mcp": {
@@ -186,7 +258,38 @@ The project integrates with MCP clients via standard configuration:
 - Can be used alongside other MCP servers
 - Supports both local and remote MCP configurations
 
-Example `opencode.json`:
+Example configurations for different clients:
+
+**Claude Code**:
+```bash
+claude mcp add docs4context -- docs4context-com
+```
+
+**Cursor (`mcp.json`)**:
+```json
+{
+  "mcpServers": {
+    "docs4context": {
+      "command": "docs4context-com",
+      "args": []
+    }
+  }
+}
+```
+
+**Windsurf**:
+```json
+{
+  "mcpServers": {
+    "docs4context": {
+      "command": "docs4context-com",
+      "args": []
+    }
+  }
+}
+```
+
+**OpenCode (`opencode.json`)**:
 ```json
 {
   "mcp": {
@@ -223,6 +326,77 @@ Example `opencode.json`:
 
 # Get detailed information about specific findings
 → use get_topic_details with repo="mark3labs/mcp-go" line_numbers="45,123,200"
+```
+
+### Advanced Usage Patterns
+
+#### Learning New Framework Pattern
+```
+1. save_context_document("framework/repo")
+2. search_titles("getting started")
+3. search_content("example implementation")
+4. get_topic_details for specific implementation examples
+5. search_titles("best practices") for advanced patterns
+```
+
+#### Cross-Repository Analysis Pattern  
+```
+1. save_context_document for multiple related repositories
+2. analyze_keywords("error handling") to find relevant repos
+3. search_content("error patterns") across all repos
+4. get_topic_details for specific implementations
+5. Compare approaches across different repositories
+```
+
+#### API Discovery Pattern
+```
+1. list_repositories to see available options
+2. search_titles("API") or search_titles("endpoints")
+3. search_content("REST API setup") for implementation details
+4. get_topic_details for complete API examples
+5. search_content("authentication") for security patterns
+```
+
+### Real-World Usage Examples
+
+#### Example 1: Learning Go Web Development
+```
+User: "I want to learn how to build REST APIs in Go"
+
+AI Agent workflow:
+1. save_context_document("gin-gonic/gin")
+2. save_context_document("gorilla/mux") 
+3. save_context_document("labstack/echo")
+4. search_titles("REST API") across all repos
+5. search_content("route handler") for implementation patterns
+6. get_topic_details for specific API examples
+7. analyze_keywords("middleware") to understand middleware patterns
+```
+
+#### Example 2: Understanding Authentication Patterns
+```
+User: "Show me different authentication approaches in Go"
+
+AI Agent workflow:
+1. analyze_keywords("authentication") to find relevant repos
+2. search_titles("auth") across identified repositories
+3. search_content("JWT token") for token-based auth
+4. search_content("session") for session-based auth
+5. get_topic_details for complete authentication implementations
+6. Compare different approaches across repositories
+```
+
+#### Example 3: Database Integration Research
+```
+User: "How do different projects handle database connections?"
+
+AI Agent workflow:
+1. analyze_keywords("database") to identify relevant repos
+2. search_titles("database connection") for setup patterns
+3. search_content("connection pool") for connection management
+4. search_content("migration") for database migration patterns
+5. get_topic_details for complete database setup examples
+6. search_content("ORM") vs search_content("raw SQL") for different approaches
 ```
 
 ## Advantages Over Bash Functions
