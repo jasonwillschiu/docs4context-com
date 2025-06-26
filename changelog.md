@@ -1,3 +1,8 @@
+# 0.1.5 - Fix: version comparison logic and updater process
+- Fixed semantic version comparison in updater.go to properly detect newer versions
+- Fixed CICD build process to correctly embed changelog version into binaries
+- Previous releases 0.1.2, 0.1.3, and 0.1.4 had incorrect version comparison logic
+
 # 0.1.4 - Fix: cicd.js to use correct version
 - previously was broken in 0.1.2 and 0.1.3
 
