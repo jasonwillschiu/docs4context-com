@@ -1,23 +1,12 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "localmcp": {
-      "type": "local",
-      "command": [
-        "./calculator-mcp/calculator-mcp"
-      ],
-      "environment": {}
-    },
     "document-downloader": {
       "type": "local",
       "command": [
-        "./docs4context-com"
+        "./bin/docs4context-com-darwin-arm64"
       ],
       "environment": {}
-    },
-    "remotemcp": {
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp"
     }
   }
 }

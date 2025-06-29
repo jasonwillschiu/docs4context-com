@@ -21,7 +21,9 @@
       "mcp__docs4context__get_topic_details",
       "Bash(mkdir:*)",
       "Bash(bun run:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }

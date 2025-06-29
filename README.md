@@ -4,6 +4,9 @@
 
 docs4context is a Model Context Protocol (MCP) server that provides AI agents with tools to download and search repository context documents from context7.com. It offers basic lookup and filtering capabilities for locally stored context documents, making repository documentation accessible to AI assistants without requiring full repository downloads.
 
+**Currently only tested on macOS ARM (Apple Silicon) machines**
+I'm personally using macOS ARM (darwin/arm64) and have only tested for the mcp working there so far.
+
 ## 🚀 Quick Start
 
 ### One-Line Installation

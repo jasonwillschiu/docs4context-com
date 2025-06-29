@@ -1,3 +1,6 @@
+# 0.1.10 - Fix: opencode.json settings
+- remote mcp via context7 removed as it was causing opencode to fail
+
 # 0.1.9 - Update: README.md, more accurate description
 - previous ai summary overstated what this repo could do
 
